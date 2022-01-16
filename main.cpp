@@ -1,17 +1,62 @@
-#include "Student.h"
+//과제 4
+#include "shape.h"
+#include <iostream>
+#include <algorithm>
+#include <numeric>
 
 using namespace std;
 
 int main() {
-    int cnt = 0; cin >> cnt;
+    vector<unique_ptr<Rectangle>> rvec; vector<unique_ptr<Circle>> cvec;
 
-    vector<unique_ptr<StudentInfo>> vec;
+    while(true) {
+        string cmd; cin >> cmd;
+        transform(begin(cmd), end(cmd), begin(cmd),  [](char& c){return tolower(c);} );
+        Command c = getCommand(cmd);
 
-    while(cnt-->0)
-        vec.emplace_back(make_student());
+        switch(c){ //RECT, CIRCLE, PRINT, SUM, SORT, CLEAR, QUIT, INVALID
+            case RECT:
+                rvec.emplace_back(make_rectangle());
+                break;
 
-    print_all(vec);
+            case CIRCLE:
+                cvec.emplace_back(make_circle());
+                break;
 
-    return 0;
+            case CLEAR:
+                rvec.clear(); cvec.clear();
+                break;
 
+            case PRINT:
+                for_each(rvec.begin(), rvec.end(), [](auto& r){ cout << "Rectangle:\t" << r->width << "\t" << r->height << "\t" << r->area << endl;} );
+                for_each(cvec.begin(), cvec.end(), [](auto& c){ cout << "Circle:\t\t" << c->radius << "\t" << c->area << endl;});
+                break;
+
+            case SUM: {  //vector 이용한 새 코드
+                vector<double> sum;
+
+                for(auto& r : rvec){
+                    sum.push_back(r->area);
+                }
+                for(auto& c : cvec){
+                    sum.push_back(c->area);
+                }
+
+                cout << accumulate(sum.begin(), sum.end(), 0) << endl;
+                break;
+
+            }
+            case SORT:
+                sort(rvec.begin(), rvec.end(),[](unique_ptr<Rectangle>& first, unique_ptr<Rectangle>& second){ return first->area > second->area; });
+                sort(cvec.begin(), cvec.end(), [](unique_ptr<Circle>& first, unique_ptr<Circle>& second){ return first->area > second->area; });
+                break;
+
+            case QUIT:
+                return 0;
+
+            case INVALID:
+                cout << "Invalid Command" << '\n';
+                break;
+        }
+    }
 }
