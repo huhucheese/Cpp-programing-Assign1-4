@@ -33,6 +33,7 @@ int main(){
             cout << "Invalid Command" << endl;
         }
     }
+    
 
     cout << "=== the number of types ===" << endl;
     cout << "int: " << icount << endl;
