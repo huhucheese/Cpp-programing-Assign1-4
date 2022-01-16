@@ -27,7 +27,9 @@ void print(const StudentInfo& si) {
     for(auto it : si.scores){
         cout << it << "\t";
     }
+    
     cout << si.sum << "\t" << si.average <<endl;
+    
 }
 
 void print_all(const vector<unique_ptr<StudentInfo>>& vec) {
